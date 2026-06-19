@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Uma's AI Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+        }
+        input:focus {
+            border-color: #667eea;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        button:disabled {
+            background: #ccc;
+        }
+        .response {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #333;
+            display: none;
+        }
+        .response.show {
+            display: block;
+        }
+        .loading {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🤖 Uma's AI Assistant</h1>
+    <p class="subtitle">Powered by Google Gemini AI</p>
+
+    <div class="input-area">
+        <input type="text" id="question" placeholder="Ask me anything..." />
+        <button id="askBtn" onclick="askAI()">Ask AI</button>
+    </div>
+
+    <div id="response" class="response"></div>
+</div>
+
+<script>
+    async function askAI() {
+        const question = document.getElementById('question').value;
+        const responseDiv = document.getElementById('response');
+        const btn = document.getElementById('askBtn');
+
+        if (!question.trim()) {
+            alert('Please type a question first!');
+            return;
+        }
+
+        responseDiv.classList.add('show');
+        responseDiv.innerHTML = '<div class="loading">🤔 Thinking...</div>';
+        btn.disabled = true;
+        btn.textContent = 'Thinking...';
+
+        try {
+            const response = await fetch('/api/ai/ask?question=' + encodeURIComponent(question));
+            const text = await response.text();
+            responseDiv.innerHTML = text;
+        } catch (error) {
+            responseDiv.innerHTML = '❌ Error: ' + error.message;
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Ask AI';
+        }
+    }
+
+    document.getElementById('question').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') askAI();
+    });
+</script>
+</body>
+</html>
