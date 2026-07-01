@@ -19,6 +19,8 @@ public class ResumeService {
 
     @Autowired
     private ResumeRepository resumeRepository;
+    @Autowired
+    private PdfService pdfService;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -50,6 +52,9 @@ public class ResumeService {
         // 4. Save file to disk
         file.transferTo(targetPath.toFile());
 
+        // 5. Extract text from the PDF
+        String extractedText = pdfService.extractTextFromPdf(targetPath.toFile());
+
         // 5. Save metadata to database
         Resume resume = new Resume();
         resume.setCandidateName(candidateName);
@@ -58,6 +63,7 @@ public class ResumeService {
         resume.setFilePath(targetPath.toString());
         resume.setFileSize(file.getSize());
 
+        resume.setExtractedText(extractedText);
         return resumeRepository.save(resume);
     }
 
