@@ -24,7 +24,9 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/ai/**").permitAll()
                         .requestMatchers("/api/jobs/**").permitAll()
+                        .requestMatchers("/api/resumes/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
