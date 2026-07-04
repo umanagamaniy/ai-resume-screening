@@ -28,6 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/jobs/**").permitAll()
                         .requestMatchers("/api/resumes/**").permitAll()
                         .requestMatchers("/api/screening/**").permitAll()    // ← ADD THIS LINE
+                        .requestMatchers("/", "/index.html", "/static/**", "/css/**", "/js/**", "/*.css", "/*.js").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
