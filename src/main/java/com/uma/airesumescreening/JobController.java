@@ -3,6 +3,7 @@ package com.uma.airesumescreening;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public class JobController {
 
     // POST /api/jobs - Create a new job
     @PostMapping
-    public ResponseEntity<Job> createJob(@RequestBody Job job) {
+    public ResponseEntity<Job> createJob(@Valid @RequestBody Job job) {
         Job created = jobService.createJob(job);
         return ResponseEntity.ok(created);
     }
@@ -42,11 +43,7 @@ public class JobController {
     // DELETE /api/jobs/{id} - Delete a job by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteJob(@PathVariable Long id) {
-        boolean deleted = jobService.deleteJob(id);
-        if (deleted) {
-            return ResponseEntity.ok("Job deleted successfully");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        jobService.deleteJob(id);
+        return ResponseEntity.ok("Job deleted successfully");
     }
 }

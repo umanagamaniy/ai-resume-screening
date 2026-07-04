@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.uma.airesumescreening.exception.ResourceNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,22 +79,17 @@ public class ResumeService {
     }
 
     // Delete a resume (both DB row + physical file)
-    public boolean deleteResume(Long id) {
-        Optional<Resume> resumeOpt = resumeRepository.findById(id);
-        if (resumeOpt.isEmpty()) {
-            return false;
-        }
+    public void deleteResume(Long id) {
+        Resume resume = resumeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Resume with id " + id + " not found"));
 
-        Resume resume = resumeOpt.get();
-
-        // Delete file from disk (if it exists)
+        // Delete file from disk if it exists
         File file = new File(resume.getFilePath());
         if (file.exists()) {
             file.delete();
         }
 
-        // Delete row from database
+        // Delete from database
         resumeRepository.deleteById(id);
-        return true;
     }
 }

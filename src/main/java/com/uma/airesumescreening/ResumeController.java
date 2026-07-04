@@ -51,11 +51,7 @@ public class ResumeController {
     // DELETE /api/resumes/{id} - Delete a resume
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteResume(@PathVariable Long id) {
-        boolean deleted = resumeService.deleteResume(id);
-        if (deleted) {
-            return ResponseEntity.ok("Resume deleted successfully");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        resumeService.deleteResume(id);
+        return ResponseEntity.ok("Resume deleted successfully");
     }
 }

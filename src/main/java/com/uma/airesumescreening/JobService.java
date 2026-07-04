@@ -2,6 +2,7 @@ package com.uma.airesumescreening;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.uma.airesumescreening.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +29,10 @@ public class JobService {
     }
 
     // Delete a job by ID
-    public boolean deleteJob(Long id) {
-        if (jobRepository.existsById(id)) {
-            jobRepository.deleteById(id);
-            return true;
+    public void deleteJob(Long id) {
+        if (!jobRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Job with id " + id + " not found");
         }
-        return false;
+        jobRepository.deleteById(id);
     }
 }
