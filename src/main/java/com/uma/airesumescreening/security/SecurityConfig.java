@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/ai/**").permitAll()
                         .requestMatchers("/api/jobs/**").permitAll()
                         .requestMatchers("/api/resumes/**").permitAll()
+                        .requestMatchers("/api/screening/**").permitAll()    // ← ADD THIS LINE
                         .anyRequest().authenticated()
                 );
         return http.build();
